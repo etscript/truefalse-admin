@@ -5,11 +5,11 @@
         <CommentDropdown v-model="postForm.comment_disabled" />
         <PlatformDropdown v-model="postForm.platforms" />
         <SourceUrlDropdown v-model="postForm.source_uri" />
-        <el-button v-if="postForm.id" v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-          修改
+        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
+          Publish
         </el-button>
-        <el-button v-if="!postForm.id" v-loading="loading" type="warning" @click="draftForm">
-          提交
+        <el-button v-loading="loading" type="warning" @click="draftForm">
+          Draft
         </el-button>
       </sticky>
 
@@ -80,7 +80,7 @@ import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { fetchArticle, updateArticle, createArticle } from '@/api/article'
+import { fetchArticle, updateArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
@@ -219,6 +219,22 @@ export default {
         this.postForm.status = 'published'
         this.loading = false
       })
+      // this.$refs.postForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$notify({
+      //       title: '成功',
+      //       message: '发布文章成功',
+      //       type: 'success',
+      //       duration: 2000
+      //     })
+      //     this.postForm.status = 'published'
+      //     this.loading = false
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     },
     draftForm() {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
@@ -228,17 +244,11 @@ export default {
         })
         return
       }
-      console.log(this.postForm)
-      createArticle(this.postForm).then(response => {
-        this.loading = true
-        this.$notify({
-          title: '成功',
-          message: '发布文章成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.postForm.status = 'published'
-        this.loading = false
+      this.$message({
+        message: '保存成功',
+        type: 'success',
+        showClose: true,
+        duration: 1000
       })
       this.postForm.status = 'draft'
     },

@@ -41,15 +41,17 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column align="center" label="Actions" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/'+scope.row.id">
-            <el-button type="primary" size="small" icon="el-icon-edit">
-              Edit
-            </el-button>
-          </router-link>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="jumpedit(scope.row.id)">
+            {{ $t('table.edit') }}
+          </el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">
+            {{ $t('table.delete') }}
+          </el-button>
         </template>
       </el-table-column>
+
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
@@ -57,7 +59,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchList, deleteArticle } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -88,6 +90,14 @@ export default {
     this.getList()
   },
   methods: {
+    jumpedit(id) {
+      this.$router.push('/example/edit/' + id)
+    },
+    handleDelete(id) {
+      deleteArticle(id).then(response => {
+        this.getList()
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {

@@ -32,10 +32,19 @@ export function createArticle(data) {
   })
 }
 
-export function updateArticle(data) {
+export function updateArticle(data, id) {
   return request({
     url: '/vue-element-admin/article/update',
-    method: 'post',
+    method: 'put',
+    params: { id },
     data
+  })
+}
+
+export function deleteArticle(id) {
+  return request({
+    url: '/vue-element-admin/article/delete',
+    method: 'delete',
+    params: { id }
   })
 }
